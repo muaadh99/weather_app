@@ -35,6 +35,22 @@ git clone https://github.com/muaadh99/weather_app.git
 cd weather_app
 ```
 
+### 2. Create and Activate a Virtual Environment
+
+python -m venv venv
+
+    On Windows:
+
+venv\Scripts\activate
+
+On macOS/Linux:
+
+    source venv/bin/activate
+
+### 3. Install Dependencies
+
+pip install -r requirements.txt
+
 ### 4. Add Your WeatherAPI Key
 
 - Create a file named `.env` in the project root (same level as `manage.py`)
@@ -61,28 +77,12 @@ http://127.0.0.1:8000/
 
 Search for a city (e.g., Galle, Sri Lanka) to view the weather report.
 
-### 📁 Project Structure
+### 📄 License
 
-weather_app/
-├── venv/                     # Virtual environment (not tracked by Git)
-├── weather_reporter/         # Django project settings
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── weather/                  # Django app for weather features
-│   ├── migrations/
-│   ├── templates/
-│   │   └── weather/
-│   │       └── index.html
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── tests.py
-│   └── views.py
-├── .env                      # Environment variables (not tracked by Git)
-├── .gitignore                # Specifies untracked files to ignore
-├── manage.py                 # Django’s command-line utility
-└── requirements.txt          # Python dependencies
+This project is open-source and available under the MIT License.
+
+### 🙌 Acknowledgments
+
+    WeatherAPI.com – for free weather data
+
+    Bootstrap – for responsive UI styling
