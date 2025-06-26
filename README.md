@@ -1,43 +1,39 @@
-## Weather App
+# 🌦️ Weather App
 
-A simple Django web application to display current weather information for any city using WeatherAPI.com.
-Features
+A simple Django web application to display current weather information for any city using [WeatherAPI.com](https://www.weatherapi.com/).
 
-    Search weather by city and country (e.g., Galle, Sri Lanka)
+---
 
-    Responsive Bootstrap UI
+## ✨ Features
 
-    Displays temperature, humidity, wind speed, UV index, pressure, and more
+- 🔍 Search weather by city and country (e.g., `Galle, Sri Lanka`)
+- 💡 Responsive Bootstrap UI
+- 📊 Displays:
+  - Temperature  
+  - Humidity  
+  - Wind Speed  
+  - UV Index  
+  - Atmospheric Pressure  
+  - Weather Condition & Icons
 
-## Prerequisites
+---
 
-    Python 3.8+
+## 🛠️ Prerequisites
 
-    pip
+- Python 3.8+
+- `pip` (Python package installer)
+- A free [WeatherAPI.com](https://www.weatherapi.com/) API key
 
-    A free WeatherAPI.com API key
+---
 
-## Setup Instructions
+## 🚀 Setup Instructions
 
-    Clone the repository
+### 1. Clone the Repository
 
-bash
+```bash
 git clone https://github.com/muaadh99/weather_app.git
 cd weather_app
-
-## Create and activate a virtual environment
-
-bash
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-## Install dependencies
-
-bash
-pip install -r requirements.txt
+```
 
 ## Add your WeatherAPI key to a .env file
 
