@@ -15,6 +15,7 @@
     .weather-icon { width: 80px; }
     .attr-icon { width: 24px; height: 24px; margin-right: 8px; vertical-align: middle; }
     .card { margin-top: 2rem; }
+    .searchbar { max-width: 400px; margin: 0 auto 2rem auto; }
   </style>
 </head>
 <body class="bg-light">
@@ -23,6 +24,14 @@
       <div class="col-12 col-md-8 col-lg-6">
         <div class="card shadow rounded-4">
           <div class="card-body p-4">
+            <form method="post" class="mb-4 d-flex searchbar" id="city-form">
+              {% csrf_token %}
+              <input type="text" name="city" class="form-control me-2"
+                     placeholder="Eg: Galle, Sri Lanka — &lt;City&gt;, &lt;Country Name&gt;"
+                     value="{{ city|default:'' }}">
+              <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+            {% if weather %}
             <h2 class="card-title text-center mb-4">Weather in {{ weather.city }}</h2>
             <div class="d-flex flex-column align-items-center mb-4">
               <img src="https:{{ weather.icon }}" alt="Weather icon" class="weather-icon mb-2">
@@ -51,6 +60,9 @@
                 Pressure: <strong>{{ weather.pressure_mb }} hPa</strong>
               </li>
             </ul>
+            {% elif error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endif %}
           </div>
         </div>
       </div>
