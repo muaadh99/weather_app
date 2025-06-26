@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -22,13 +23,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y(^och2*4(92no#us1e8b%kh+za7!2)b#2r95#o%hy(xwbctcx'
+# Security settings for production
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = 'RENDER' not in os.environ
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+# ALLOWED_HOSTS configuration
 ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# For local development
+if DEBUG:
+    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost'])
 
 
 # Application definition
