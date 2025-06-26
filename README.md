@@ -35,41 +35,43 @@ git clone https://github.com/muaadh99/weather_app.git
 cd weather_app
 ```
 
-## Add your WeatherAPI key to a .env file
+### 4. Add Your WeatherAPI Key
 
-    Create a file named .env in the project root (same level as manage.py)
+- Create a file named `.env` in the project root (same level as `manage.py`)
+- Add the following line (replace with your actual API key):
 
-    Add this line (replace with your actual API key):
+WEATHERAPI_KEY=your_actual_api_key
 
-    WEATHERAPI_KEY=your_actual_api_key
 
-## Apply migrations
+---
 
-bash
+### 5. Apply Migrations
+
+```bash
 python manage.py migrate
+```
 
-## Run the development server
+### 6. Run the Development Server
 
-    bash
-    python manage.py runserver
+python manage.py runserver
 
-    Open in your browser
+Then open your browser and visit:
 
-        Visit http://127.0.0.1:8000/
+http://127.0.0.1:8000/
 
-        Search for a city (e.g., Galle, Sri Lanka)
+Search for a city (e.g., Galle, Sri Lanka) to view the weather report.
 
-## Project Structure
+### 📁 Project Structure
 
 weather_app/
-├── venv/
-├── weather_reporter/
+├── venv/                     # Virtual environment (not tracked by Git)
+├── weather_reporter/         # Django project settings
 │   ├── __init__.py
 │   ├── asgi.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
-├── weather/
+├── weather/                  # Django app for weather features
 │   ├── migrations/
 │   ├── templates/
 │   │   └── weather/
@@ -80,7 +82,7 @@ weather_app/
 │   ├── models.py
 │   ├── tests.py
 │   └── views.py
-├── .env
-├── .gitignore
-├── manage.py
-└── requirements.txt
+├── .env                      # Environment variables (not tracked by Git)
+├── .gitignore                # Specifies untracked files to ignore
+├── manage.py                 # Django’s command-line utility
+└── requirements.txt          # Python dependencies
