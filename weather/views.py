@@ -23,6 +23,13 @@ def get_weather(city="Colombo"):
 
 
 def index(request):
-    weather = get_weather()
-    return render(request, "weather/index.html", {"weather": weather})
+    city = "Colombo"
+    error = ""
+    if request.method == "POST":
+        city = request.POST.get("city", "Colombo")
+    weather = get_weather(city)
+    if not weather:
+        error = "City not found or API error."
+    return render(request, "weather/index.html", {"weather": weather, "city": city, "error": error})
+
 
