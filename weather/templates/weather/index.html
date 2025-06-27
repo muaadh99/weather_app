@@ -18,20 +18,26 @@
     .card { margin-top: 2rem; }
     .searchbar { max-width: 400px; margin: 0 auto 2rem auto; }
   </style>
-</head>
-<body class="bg-light">
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-8 col-lg-6">
-        <div class="card shadow rounded-4">
-          <div class="card-body p-4">
-            <form method="post" class="mb-4 d-flex searchbar" id="city-form">
-              {% csrf_token %}
-              <input type="text" name="city" class="form-control me-2"
-                     placeholder="Eg: Galle, Sri Lanka — <City>, <Country Name>"
-                     value="{{ city|default:'' }}">
-              <button class="btn btn-primary" type="submit">Search</button>
-            </form>
+  </head>
+  <body class="bg-light">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <div class="card shadow rounded-4">
+            <div class="card-body p-4">
+              <form method="post" class="mb-4 d-flex searchbar" id="city-form">
+                {% csrf_token %}
+                <input type="text" name="city" class="form-control me-2"
+                      placeholder="Eg: Galle, Sri Lanka — <City>, <Country Name>"
+                      value="{{ city|default:'' }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+              </form>
+            <!-- Loader Spinner -->
+            <div id="loader" class="text-center" style="display:none;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
             {% if weather %}
             <h2 class="card-title text-center mb-4">Weather in {{ weather.city }}</h2>
             <p class="text-center text-muted">{{ now|date:"l, F j, Y" }} — <span id="live-time">{{ now|time:"H:i:s" }}</span>
@@ -45,7 +51,19 @@
               }
               setInterval(updateTime, 1000);
             </script>
-                        <div class="d-flex flex-column align-items-center mb-4">
+              <script>
+              document.getElementById('city-form').onsubmit = function() {
+                document.getElementById('loader').style.display = 'block';
+                document.getElementById('weather-card').style.display = 'none';
+              };
+              window.onload = function() {
+                document.getElementById('loader').style.display = 'none';
+                if(document.getElementById('weather-card')) {
+                  document.getElementById('weather-card').style.display = 'block';
+                }
+              };
+            </script>
+              <div class="d-flex flex-column align-items-center mb-4">
               <img src="https:{{ weather.icon }}" alt="Weather icon" class="weather-icon mb-2">
               <h3 class="display-4 my-3">{{ weather.temp_c }}°C</h3>
               <span class="text-muted">{{ weather.condition }}</span>
