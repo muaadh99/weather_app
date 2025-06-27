@@ -1,6 +1,7 @@
 import os
 import requests
 from django.shortcuts import render
+from django.utils import timezone
 
 def get_weather(city="Colombo"):
     api_key = os.getenv("WEATHERAPI_KEY")
@@ -30,6 +31,10 @@ def index(request):
     weather = get_weather(city)
     if not weather:
         error = "City not found or API error."
-    return render(request, "weather/index.html", {"weather": weather, "city": city, "error": error})
-
-
+    current_time = timezone.now() 
+    return render(request, "weather/index.html", {
+        "weather": weather,
+        "city": city,
+        "error": error,
+        "now": current_time 
+    })
