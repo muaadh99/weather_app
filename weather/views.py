@@ -3,10 +3,12 @@ import requests
 from django.shortcuts import render
 from django.utils import timezone
 from django.http import JsonResponse
+from datetime import datetime
+
 
 def get_weather(city="Colombo"):
     api_key = os.getenv("WEATHERAPI_KEY")
-    url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&days=7"
+    url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&days=7&aqi=no&alerts=no"
     try:
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
@@ -28,12 +30,9 @@ def get_weather(city="Colombo"):
             # 7-day forecast data
             forecast_days = []
             for day in data["forecast"]["forecastday"]:
-                # Convert date string to datetime object for proper template formatting
-                from datetime import datetime
                 date_obj = datetime.strptime(day["date"], "%Y-%m-%d").date()
-                
                 forecast_days.append({
-                    "date": date_obj,  # Pass as date object for template filters
+                    "date": date_obj,
                     "max_temp": day["day"]["maxtemp_c"],
                     "min_temp": day["day"]["mintemp_c"],
                     "condition": day["day"]["condition"]["text"],
@@ -42,10 +41,28 @@ def get_weather(city="Colombo"):
                     "uv": day["day"]["uv"],
                 })
             
-            return current_weather, forecast_days
+            # Today's hourly forecast (24 hours)
+            hourly_forecast = []
+            if data["forecast"]["forecastday"]:
+                for hour in data["forecast"]["forecastday"][0]["hour"]:
+                    hour_time = datetime.strptime(hour["time"], "%Y-%m-%d %H:%M")
+                    hourly_forecast.append({
+                        "time": hour_time,
+                        "temp_c": hour["temp_c"],
+                        "condition": hour["condition"]["text"],
+                        "icon": hour["condition"]["icon"],
+                        "chance_of_rain": hour["chance_of_rain"],
+                        "humidity": hour["humidity"],
+                        "wind_kph": hour["wind_kph"],
+                        "feelslike_c": hour["feelslike_c"],
+                    })
+            
+            return current_weather, forecast_days, hourly_forecast
     except Exception:
         pass
-    return None, None
+    return None, None, None
+
+
 
 def city_autocomplete(request):
     api_key = os.getenv("WEATHERAPI_KEY")
@@ -56,7 +73,6 @@ def city_autocomplete(request):
     resp = requests.get(url)
     if resp.status_code == 200:
         results = resp.json()
-        # Format: "City, Country"
         suggestions = [f"{loc['name']}, {loc['country']}" for loc in results]
         return JsonResponse(suggestions, safe=False)
     return JsonResponse([], safe=False)
@@ -70,18 +86,18 @@ def index(request):
     if request.method == "POST":
         city = request.POST.get("city", "Colombo")
     
-    weather, forecast = get_weather(city)
+    weather, forecast, hourly = get_weather(city)
     if not weather:
         error = "City not found or API error."
     
-    # Add current time for the live clock
-    from datetime import datetime
     now = datetime.now()
     
     return render(request, "weather/index.html", {
         "weather": weather, 
         "forecast": forecast,
+        "hourly": hourly,
         "city": city, 
         "error": error,
         "now": now,
     })
+

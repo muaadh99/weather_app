@@ -15,8 +15,11 @@
     .card { margin-top: 2rem; }
     .searchbar { max-width: 400px; margin: 0 auto 2rem auto; }
     .forecast-icon { width: 40px; }
+    .hourly-icon { width: 30px; }
     .forecast-card { transition: transform 0.2s; }
     .forecast-card:hover { transform: translateY(-5px); }
+    .hourly-scroll { overflow-x: auto; white-space: nowrap; }
+    .hourly-item { display: inline-block; min-width: 100px; text-align: center; margin-right: 15px; }
   </style>
 
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
@@ -67,6 +70,27 @@
                 <li class="list-group-item">Pressure: <strong>{{ weather.pressure_mb }} hPa</strong></li>
               </ul>
               
+                            <!-- Hourly Forecast for Today -->
+              {% if hourly %}
+              <h3 class="text-center mb-4">Today's Hourly Forecast</h3>
+              <div class="hourly-scroll pb-3 mb-4">
+                {% for hour in hourly %}
+                <div class="hourly-item">
+                  <div class="card text-center border-0 bg-light">
+                    <div class="card-body py-2">
+                      <p class="small mb-1"><strong>{{ hour.time|time:"H:i" }}</strong></p>
+                      <img src="https:{{ hour.icon }}" alt="{{ hour.condition }}" class="hourly-icon mb-1">
+                      <p class="small mb-1"><strong>{{ hour.temp_c|floatformat:0 }}°</strong></p>
+                      <p class="small text-muted mb-1">{{ hour.chance_of_rain }}% rain</p>
+                      <p class="small text-muted">{{ hour.wind_kph|floatformat:0 }} km/h</p>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              
+
               <!-- 7-Day Forecast -->
               {% if forecast %}
               <h3 class="text-center mb-4">Coming Week's Forecast</h3>
