@@ -2,6 +2,7 @@ import os
 import requests
 from django.shortcuts import render
 from django.utils import timezone
+from django.http import JsonResponse
 
 def get_weather(city="Colombo"):
     api_key = os.getenv("WEATHERAPI_KEY")
@@ -45,6 +46,20 @@ def get_weather(city="Colombo"):
     except Exception:
         pass
     return None, None
+
+def city_autocomplete(request):
+    api_key = os.getenv("WEATHERAPI_KEY")
+    query = request.GET.get("term", "")
+    if not query:
+        return JsonResponse([], safe=False)
+    url = f"http://api.weatherapi.com/v1/search.json?key={api_key}&q={query}"
+    resp = requests.get(url)
+    if resp.status_code == 200:
+        results = resp.json()
+        # Format: "City, Country"
+        suggestions = [f"{loc['name']}, {loc['country']}" for loc in results]
+        return JsonResponse(suggestions, safe=False)
+    return JsonResponse([], safe=False)
 
 def index(request):
     city = "Colombo"
