@@ -8,7 +8,7 @@ from datetime import datetime
 
 def get_weather(city="Colombo"):
     api_key = os.getenv("WEATHERAPI_KEY")
-    url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&days=7&aqi=no&alerts=no"
+    url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&days=7&aqi=no&alerts=yes"
     try:
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
@@ -71,10 +71,30 @@ def get_weather(city="Colombo"):
                         "feelslike_c": hour["feelslike_c"],
                     })
             
-            return current_weather, forecast_days, hourly_forecast
+            # Weather alerts
+            alerts = []
+            if "alerts" in data and "alert" in data["alerts"]:
+                for alert in data["alerts"]["alert"]:
+                    alerts.append({
+                        "headline": alert.get("headline", "Weather Alert"),
+                        "msgtype": alert.get("msgtype", ""),
+                        "severity": alert.get("severity", ""),
+                        "urgency": alert.get("urgency", ""),
+                        "areas": alert.get("areas", ""),
+                        "category": alert.get("category", ""),
+                        "certainty": alert.get("certainty", ""),
+                        "event": alert.get("event", ""),
+                        "note": alert.get("note", ""),
+                        "effective": alert.get("effective", ""),
+                        "expires": alert.get("expires", ""),
+                        "desc": alert.get("desc", ""),
+                        "instruction": alert.get("instruction", ""),
+                    })
+            
+            return current_weather, forecast_days, hourly_forecast, alerts
     except Exception:
         pass
-    return None, None, None
+    return None, None, None, None
 
 
 
@@ -100,7 +120,7 @@ def index(request):
     if request.method == "POST":
         city = request.POST.get("city", "Colombo")
     
-    weather, forecast, hourly = get_weather(city)
+    weather, forecast, hourly, alerts = get_weather(city)
     if not weather:
         error = "City not found or API error."
     
@@ -110,6 +130,7 @@ def index(request):
         "weather": weather, 
         "forecast": forecast,
         "hourly": hourly,
+        "alerts": alerts,
         "city": city, 
         "error": error,
         "now": now,

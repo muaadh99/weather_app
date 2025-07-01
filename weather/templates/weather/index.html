@@ -150,22 +150,246 @@
     }
     
     [data-bs-theme="light"] .weekly-header {
-      background: linear-gradient(135deg, #d16082 0%, #9b68b9 100%) !important;
+      background: linear-gradient(135deg, #d43867 0%, #a54f6a 100%) !important;
+    }
+    
+    /* Stylish Dark Mode Toggle */
+    .theme-toggle {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+    
+    .theme-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .theme-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+      transition: all 0.4s ease;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .theme-slider:before {
+      position: absolute;
+      content: "☀️";
+      height: 24px;
+      width: 24px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: all 0.4s ease;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    input:checked + .theme-slider {
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+    }
+    
+    input:checked + .theme-slider:before {
+      transform: translateX(30px);
+      content: "🌙";
+    }
+    
+    .theme-toggle:hover .theme-slider {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* Dark mode theme toggle adjustments */
+    [data-bs-theme="dark"] .theme-slider {
+      background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+    }
+    
+    [data-bs-theme="dark"] .theme-slider:before {
+      content: "🌙" !important;
+      transform: translateX(30px) !important;
+    }
+    
+    [data-bs-theme="light"] .theme-slider {
+      background: linear-gradient(135deg, #ffeaa7, #fab1a0) !important;
+    }
+    
+    [data-bs-theme="light"] .theme-slider:before {
+      content: "☀️" !important;
+      transform: translateX(0px) !important;
+    }
+    
+    /* Floating Alert Button */
+    .alert-floating-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1050;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .alert-floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(255, 107, 107, 0.6);
+      background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+    }
+    
+    .alert-floating-btn.pulse {
+      animation: alertPulse 2s infinite;
+    }
+    
+    @keyframes alertPulse {
+      0% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4); }
+      50% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.8), 0 0 0 10px rgba(255, 107, 107, 0.2); }
+      100% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4); }
+    }
+    
+    .alert-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ffffff;
+      color: #ff6b6b;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ff6b6b;
+    }
+    
+    /* Alert Modal Styling */
+    .alert-modal {
+      border-radius: 15px;
+      border: none;
+      overflow: hidden;
+    }
+    
+    .alert-modal .modal-header {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      border: none;
+      padding: 1.5rem;
+    }
+    
+    .alert-modal .modal-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .alert-modal .modal-title i {
+      margin-right: 10px;
+      font-size: 1.5rem;
+    }
+    
+    .alert-item {
+      border-left: 4px solid #ff6b6b;
+      background: #fff5f5;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .alert-item:hover {
+      background: #ffe6e6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+    }
+    
+    .alert-severity {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    
+    .alert-severity.severe {
+      background: #ff4757;
+      color: white;
+    }
+    
+    .alert-severity.moderate {
+      background: #ffa502;
+      color: white;
+    }
+    
+    .alert-severity.minor {
+      background: #2ed573;
+      color: white;
+    }
+    
+    .alert-severity.unknown {
+      background: #57606f;
+      color: white;
+    }
+    
+    /* Dark mode alert styling */
+    [data-bs-theme="dark"] .alert-item {
+      background: #2d1b1b;
+      color: #f8f9fa;
+    }
+    
+    [data-bs-theme="dark"] .alert-item:hover {
+      background: #3d2525;
+    }
+    
+    [data-bs-theme="dark"] .modal-content {
+      background-color: var(--bg-body-dark);
+      color: #f8f9fa;
     }
   </style>
 
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body class="bg-light">
+  <!-- Floating Alert Button -->
+  {% if alerts %}
+  <button class="alert-floating-btn pulse" data-bs-toggle="modal" data-bs-target="#alertModal">
+    <i class="wi wi-lightning"></i>
+    <span class="alert-badge">{{ alerts|length }}</span>
+  </button>
+  {% endif %}
+
   <div class="container-fluid py-3 px-2">
     <div class="d-flex justify-content-end mb-3">
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="darkModeSwitch">
-        <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
-      </div>
+      <label class="theme-toggle">
+        <input type="checkbox" id="darkModeSwitch">
+        <span class="theme-slider"></span>
+      </label>
     </div>
     <div class="row justify-content-center">
       <div class="col-12 col-xl-11 col-lg-11 col-md-12">
@@ -305,8 +529,8 @@
                     Coming Week's Forecast
                   </h3>
                 </div>
-                <div class="card-body p-4">
-                  <div class="row g-3">
+                <div class="card-body p-4 ">
+                  <div class="row g-3 justify-content-center">
                     {% for day in forecast %}
                     <div class="col-lg-3 col-md-4 col-sm-6">
                       <div class="card forecast-card h-100 text-center bg-body text-body border border-secondary-subtle shadow-sm">
@@ -344,6 +568,82 @@
       </div>
     </div>
   </div>
+  
+  <!-- Weather Alerts Modal -->
+  {% if alerts %}
+  <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content alert-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="alertModalLabel">
+            <i class="wi wi-lightning"></i>
+            Weather Alerts for {{ weather.city }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% for alert in alerts %}
+          <div class="alert-item">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="mb-0 text-danger fw-bold">{{ alert.headline }}</h6>
+              {% if alert.severity %}
+              <span class="alert-severity {% if alert.severity == 'Severe' %}severe{% elif alert.severity == 'Moderate' %}moderate{% elif alert.severity == 'Minor' %}minor{% else %}unknown{% endif %}">
+                {{ alert.severity }}
+              </span>
+              {% endif %}
+            </div>
+            
+            {% if alert.event %}
+            <p class="mb-2"><strong>Event:</strong> {{ alert.event }}</p>
+            {% endif %}
+            
+            {% if alert.desc %}
+            <p class="mb-2">{{ alert.desc }}</p>
+            {% endif %}
+            
+            {% if alert.instruction %}
+            <div class="alert alert-warning py-2 px-3 mb-2">
+              <strong>Instructions:</strong> {{ alert.instruction }}
+            </div>
+            {% endif %}
+            
+            <div class="row mt-3">
+              {% if alert.effective %}
+              <div class="col-md-6">
+                <small class="text-muted">
+                  <strong>Effective:</strong><br>
+                  {{ alert.effective|date:"M j, Y H:i" }}
+                </small>
+              </div>
+              {% endif %}
+              
+              {% if alert.expires %}
+              <div class="col-md-6">
+                <small class="text-muted">
+                  <strong>Expires:</strong><br>
+                  {{ alert.expires|date:"M j, Y H:i" }}
+                </small>
+              </div>
+              {% endif %}
+            </div>
+            
+            {% if alert.areas %}
+            <div class="mt-2">
+              <small class="text-muted">
+                <strong>Areas:</strong> {{ alert.areas }}
+              </small>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   
   <script>
     function updateTime() {
