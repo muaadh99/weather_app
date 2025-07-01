@@ -26,14 +26,102 @@
     }
 
     .weather-icon { width: 80px; }
-    .card { margin-top: 2rem; }
-    .searchbar { max-width: 400px; margin: 0 auto 2rem auto; }
+    .card { margin-top: 1rem; }
+    .searchbar { max-width: 500px; margin: 0 auto 1.5rem auto; }
     .forecast-icon { width: 40px; }
     .hourly-icon { width: 30px; }
-    .forecast-card { transition: transform 0.2s; }
-    .forecast-card:hover { transform: translateY(-5px); }
-    .hourly-scroll { overflow-x: auto; white-space: nowrap; }
-    .hourly-item { display: inline-block; min-width: 100px; text-align: center; margin-right: 15px; }
+    .forecast-card { 
+      transition: all 0.3s ease; 
+      border-radius: 12px !important;
+    }
+    .forecast-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+    .hourly-scroll { 
+      overflow-x: auto; 
+      white-space: nowrap; 
+      padding-bottom: 10px;
+    }
+    .hourly-item { 
+      display: inline-block; 
+      min-width: 120px; 
+      text-align: center; 
+      margin-right: 15px; 
+    }
+    .section-card {
+      border-radius: 15px !important;
+      margin-bottom: 1.5rem;
+    }
+    .section-header {
+      border-radius: 15px 15px 0 0 !important;
+    }
+    .weather-section {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    /* Wider layout optimizations */
+    .container-fluid {
+      max-width: 100%;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+    @media (min-width: 1400px) {
+      .container-fluid {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+      }
+    }
+    
+    /* Dark mode autocomplete styling */
+    [data-bs-theme="dark"] .ui-autocomplete {
+      background-color: var(--bg-body-dark) !important;
+      border: 1px solid #495057 !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+    }
+    
+    [data-bs-theme="dark"] .ui-menu-item {
+      background-color: var(--bg-body-dark) !important;
+    }
+    
+    [data-bs-theme="dark"] .ui-menu-item-wrapper {
+      color: #f8f9fa !important;
+      background-color: transparent !important;
+      border: none !important;
+      padding: 8px 12px !important;
+    }
+    
+    [data-bs-theme="dark"] .ui-menu-item-wrapper:hover,
+    [data-bs-theme="dark"] .ui-state-active {
+      background-color: #495057 !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+    
+    [data-bs-theme="dark"] .ui-widget-content {
+      background-color: var(--bg-body-dark) !important;
+      border: 1px solid #495057 !important;
+      color: #f8f9fa !important;
+    }
+    
+    /* Light mode autocomplete styling */
+    [data-bs-theme="light"] .ui-autocomplete {
+      background-color: #ffffff !important;
+      border: 1px solid #dee2e6 !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    }
+    
+    [data-bs-theme="light"] .ui-menu-item-wrapper {
+      color: #212529 !important;
+      padding: 8px 12px !important;
+    }
+    
+    [data-bs-theme="light"] .ui-menu-item-wrapper:hover,
+    [data-bs-theme="light"] .ui-state-active {
+      background-color: #e9ecef !important;
+      color: #212529 !important;
+    }
   </style>
 
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
@@ -42,7 +130,7 @@
 </head>
 
 <body class="bg-light">
-  <div class="container-fluid py-5">
+  <div class="container-fluid py-3 px-2">
     <div class="d-flex justify-content-end mb-3">
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="darkModeSwitch">
@@ -50,7 +138,7 @@
       </div>
     </div>
     <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-8">
+      <div class="col-12 col-xl-11 col-lg-11 col-md-12">
         <div class="card shadow rounded-4">
           <div class="card-body p-4">
             <form method="post" class="mb-4 d-flex searchbar" id="city-form">
@@ -71,114 +159,149 @@
             <!-- Weather Card -->
             <div id="weather-card">
               {% if weather %}
-              <!-- Current Weather -->
-              <h2 class="card-title text-center mb-4">Weather in {{ weather.city }}</h2>
-              <p class="text-center text-muted">{{ now|date:"l, F j, Y" }} — <span id="live-time">{{ now|time:"H:i:s" }}</span></p>
+              
+              <!-- Section 1: Current Weather in City -->
+              <div class="card shadow-sm mb-4 border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body p-4 text-white">
+                  <h2 class="card-title text-center mb-3 text-white">Weather in {{ weather.city }}</h2>
+                  <p class="text-center text-white-50 mb-4">
+                    {% if weather.localtime %}
+                      {{ weather.localtime|date:"l, F j, Y" }} — <span id="location-time">{{ weather.localtime|date:"H:i:s" }}</span>
+                      <br><small class="text-white-50">Local time in {{ weather.city }}{% if weather.region %}, {{ weather.region }}{% endif %}</small>
+                    {% else %}
+                      {{ now|date:"l, F j, Y" }} — <span id="live-time">{{ now|time:"H:i:s" }}</span>
+                    {% endif %}
+                  </p>
 
-              <div class="row align-items-center justify-content-center mb-4 g-4">
-                <!-- Left: Main Weather Icon, Temp, Condition -->
-                <div class="col-12 col-md-5">
-                  <div class="d-flex flex-column align-items-center">
-                    <img src="https:{{ weather.icon }}" alt="Weather icon" style="width:80px; margin-bottom:10px;">
-                    <div class="display-4 my-3">{{ weather.temp_c }}°C</div>
-                    <div class="text-muted" style="font-size:1.1rem;">{{ weather.condition }}</div>
-                  </div>
-                </div>
-                <!-- Right: Metrics in Small Boxes -->
-                <div class="col-12 col-md-7">
-                  <div class="row g-3">
-                    <div class="col-6 col-sm-4">
-                      <div class="card text-center shadow-sm py-3">
-                        <i class="wi wi-humidity" style="font-size:2em; color:#3498db;"></i>
-                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.humidity }}%</div>
-                        <div class="small text-muted">Humidity</div>
+                  <div class="row align-items-center justify-content-center g-4">
+                    <!-- Left: Main Weather Icon, Temp, Condition -->
+                    <div class="col-12 col-md-5">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="https:{{ weather.icon }}" alt="Weather icon" style="width:100px; margin-bottom:15px;">
+                        <div class="display-3 my-3 text-white fw-bold">{{ weather.temp_c }}°C</div>
+                        <div class="text-white-50 fs-5">{{ weather.condition }}</div>
                       </div>
                     </div>
-                    <div class="col-6 col-sm-4">
-                      <div class="card text-center shadow-sm py-3">
-                        <i class="wi wi-strong-wind" style="font-size:2em; color:#95a5a6;"></i>
-                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.wind_kph }} km/h</div>
-                        <div class="small text-muted">Wind</div>
-                      </div>
-                    </div>
-                    <div class="col-6 col-sm-4">
-                      <div class="card text-center shadow-sm py-3">
-                        <i class="wi wi-day-sunny" style="font-size:2em; color:#f7b731;"></i>
-                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.uv }}</div>
-                        <div class="small text-muted">UV Index</div>
-                      </div>
-                    </div>
-                    <div class="col-6 col-sm-4">
-                      <div class="card text-center shadow-sm py-3">
-                        <i class="wi wi-thermometer" style="font-size:2em; color:#e17055;"></i>
-                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.feelslike_c }}°C</div>
-                        <div class="small text-muted">Feels Like</div>
-                      </div>
-                    </div>
-                    <div class="col-6 col-sm-4">
-                      <div class="card text-center shadow-sm py-3">
-                        <i class="wi wi-barometer" style="font-size:2em; color:#636e72;"></i>
-                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.pressure_mb }} hPa</div>
-                        <div class="small text-muted">Pressure</div>
-                      </div>
-                    </div>
-                    <div class="col-6 col-sm-4">
-                      <div class="card text-center shadow-sm py-3">
-                        <i class="wi wi-raindrop" style="font-size:2em; color:#00b894;"></i>
-                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.dewpoint_c }}°C</div>
-                        <div class="small text-muted">Dew Point</div>
+                    <!-- Right: Metrics in Small Boxes -->
+                    <div class="col-12 col-md-7">
+                      <div class="row g-3">
+                        <div class="col-6 col-sm-4">
+                          <div class="card text-center shadow-sm py-3 bg-white bg-opacity-10 border-0">
+                            <i class="wi wi-humidity text-white" style="font-size:2em;"></i>
+                            <div class="mt-2 fw-bold text-white" style="font-size:1.1em;">{{ weather.humidity }}%</div>
+                            <div class="small text-white-50">Humidity</div>
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                          <div class="card text-center shadow-sm py-3 bg-white bg-opacity-10 border-0">
+                            <i class="wi wi-strong-wind text-white" style="font-size:2em;"></i>
+                            <div class="mt-2 fw-bold text-white" style="font-size:1.1em;">{{ weather.wind_kph }} km/h</div>
+                            <div class="small text-white-50">Wind</div>
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                          <div class="card text-center shadow-sm py-3 bg-white bg-opacity-10 border-0">
+                            <i class="wi wi-day-sunny text-white" style="font-size:2em;"></i>
+                            <div class="mt-2 fw-bold text-white" style="font-size:1.1em;">{{ weather.uv }}</div>
+                            <div class="small text-white-50">UV Index</div>
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                          <div class="card text-center shadow-sm py-3 bg-white bg-opacity-10 border-0">
+                            <i class="wi wi-thermometer text-white" style="font-size:2em;"></i>
+                            <div class="mt-2 fw-bold text-white" style="font-size:1.1em;">{{ weather.feelslike_c }}°C</div>
+                            <div class="small text-white-50">Feels Like</div>
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                          <div class="card text-center shadow-sm py-3 bg-white bg-opacity-10 border-0">
+                            <i class="wi wi-barometer text-white" style="font-size:2em;"></i>
+                            <div class="mt-2 fw-bold text-white" style="font-size:1.1em;">{{ weather.pressure_mb }} hPa</div>
+                            <div class="small text-white-50">Pressure</div>
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                          <div class="card text-center shadow-sm py-3 bg-white bg-opacity-10 border-0">
+                            <i class="wi wi-raindrop text-white" style="font-size:2em;"></i>
+                            <div class="mt-2 fw-bold text-white" style="font-size:1.1em;">{{ weather.dewpoint_c }}°C</div>
+                            <div class="small text-white-50">Dew Point</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              
-              <!-- Hourly Forecast for Today -->
+              <!-- Section 2: Hourly Forecast -->
               {% if hourly %}
-              <h3 class="text-center mb-">Hourly Forecast</h3>
-              <div class="hourly-scroll pb-3 mb-4">
-                {% for hour in hourly %}
-                <div class="hourly-item">
-                  <div class="card text-center border-1 bg-body">
-                    <div class="card-body py-2">
-                      <p class="small mb-1"><strong>{{ hour.time|time:"H:i" }}</strong></p>
-                      <img src="https:{{ hour.icon }}" alt="{{ hour.condition }}" class="hourly-icon mb-1">
-                      <p class="small mb-1"><strong>{{ hour.temp_c|floatformat:0 }}°</strong></p>
-                      <p class="small text-muted mb-1">{{ hour.chance_of_rain }}% rain</p>
-                      <p class="small text-muted">{{ hour.wind_kph|floatformat:0 }} km/h</p>
+              <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-primary text-white py-3">
+                  <h3 class="text-center mb-0 h4">
+                    <i class="wi wi-time-4 me-2"></i>
+                    Hourly Forecast
+                  </h3>
+                </div>
+                <div class="card-body p-4">
+                  <div class="hourly-scroll pb-2">
+                    {% for hour in hourly %}
+                    <div class="hourly-item">
+                      <div class="card text-center border-1 bg-body shadow-sm h-100">
+                        <div class="card-body py-3">
+                          <p class="small mb-2 fw-bold text-primary">{{ hour.time|time:"H:i" }}</p>
+                          <img src="https:{{ hour.icon }}" alt="{{ hour.condition }}" class="hourly-icon mb-2">
+                          <p class="mb-2 fw-bold fs-6">{{ hour.temp_c|floatformat:0 }}°</p>
+                          <p class="small text-muted mb-1">
+                            <i class="wi wi-raindrop"></i> {{ hour.chance_of_rain }}%
+                          </p>
+                          <p class="small text-muted">
+                            <i class="wi wi-strong-wind"></i> {{ hour.wind_kph|floatformat:0 }} km/h
+                          </p>
+                        </div>
+                      </div>
                     </div>
+                    {% endfor %}
                   </div>
                 </div>
-                {% endfor %}
               </div>
               {% endif %}
-              
 
-              <!-- 7-Day Forecast -->
+              <!-- Section 3: Weekly Forecast -->
               {% if forecast %}
-              <h3 class="text-center mb-4">Coming Week's Forecast</h3>
-              <div class="row ">
-                {% for day in forecast %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                  <div class="card forecast-card h-100 text-center bg-body text-body border border-secondary-subtle">
-                    <div class="card-body">
-                      {% if forloop.first %}
-                        <h6 class="card-title">Today</h6>
-                      {% elif forloop.counter == 2 %}
-                        <h6 class="card-title">Tomorrow</h6>
-                      {% else %}
-                        <h6 class="card-title">{{ day.date|date:"l" }}</h6>
-                      {% endif %}
-                      <p class="card-text small text-muted">{{ day.date|date:"M j" }}</p>
-                      <img src="https:{{ day.icon }}" alt="{{ day.condition }}" class="forecast-icon mb-2">
-                      <p class="mb-1"><strong>{{ day.max_temp|floatformat:0 }}° / {{ day.min_temp|floatformat:0 }}°</strong></p>
-                      <p class="small text-muted mb-1">{{ day.condition }}</p>
-                      <small class="text-muted">UV: {{ day.uv }} | Humidity: {{ day.humidity }}%</small>
+              <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-success text-white py-3">
+                  <h3 class="text-center mb-0 h4">
+                    <i class="wi wi-day-sunny me-2"></i>
+                    Coming Week's Forecast
+                  </h3>
+                </div>
+                <div class="card-body p-4">
+                  <div class="row g-3">
+                    {% for day in forecast %}
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                      <div class="card forecast-card h-100 text-center bg-body text-body border border-secondary-subtle shadow-sm">
+                        <div class="card-body py-3">
+                          {% if forloop.first %}
+                            <h6 class="card-title text-primary fw-bold">Today</h6>
+                          {% elif forloop.counter == 2 %}
+                            <h6 class="card-title text-warning fw-bold">Tomorrow</h6>
+                          {% else %}
+                            <h6 class="card-title fw-bold">{{ day.date|date:"l" }}</h6>
+                          {% endif %}
+                          <p class="card-text small text-muted mb-3">{{ day.date|date:"M j" }}</p>
+                          <img src="https:{{ day.icon }}" alt="{{ day.condition }}" class="forecast-icon mb-3" style="width: 50px;">
+                          <p class="mb-2 fw-bold fs-6">{{ day.max_temp|floatformat:0 }}° / {{ day.min_temp|floatformat:0 }}°</p>
+                          <p class="small text-muted mb-2">{{ day.condition }}</p>
+                          <div class="small text-muted">
+                            <div><i class="wi wi-day-sunny"></i> UV: {{ day.uv }}</div>
+                            <div><i class="wi wi-humidity"></i> {{ day.humidity }}%</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    {% endfor %}
                   </div>
                 </div>
-                {% endfor %}
               </div>
               {% endif %}
               
@@ -195,9 +318,35 @@
   <script>
     function updateTime() {
       const now = new Date();
-      document.getElementById('live-time').textContent =
-        now.toLocaleTimeString('en-GB', { hour12: false });
+      // Update live time (fallback when no weather data)
+      const liveTimeElement = document.getElementById('live-time');
+      if (liveTimeElement) {
+        liveTimeElement.textContent = now.toLocaleTimeString('en-GB', { hour12: false });
+      }
+      
+      // Update location time if weather data is available
+      const locationTimeElement = document.getElementById('location-time');
+      if (locationTimeElement && '{{ weather.timezone_id }}') {
+        try {
+          const locationTime = new Date().toLocaleString('en-GB', {
+            timeZone: '{{ weather.timezone_id }}',
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          });
+          // Extract just the time part (HH:MM:SS)
+          const timePart = locationTime.split(', ')[1] || locationTime;
+          locationTimeElement.textContent = timePart;
+        } catch (error) {
+          // Fallback to server time if timezone is invalid
+          locationTimeElement.textContent = now.toLocaleTimeString('en-GB', { hour12: false });
+        }
+      }
     }
+    
+    // Update time immediately and then every second
+    updateTime();
     setInterval(updateTime, 1000);
     
     document.getElementById('city-form').onsubmit = function() {
