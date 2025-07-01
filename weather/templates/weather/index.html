@@ -12,6 +12,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    :root {
+      --bg-body-light: #f8f9fa;
+      --bg-body-dark: #181a1b;
+    }
+    [data-bs-theme="light"] body {
+      background-color: var(--bg-body-light) !important;
+      color: #191919;
+    }
+    [data-bs-theme="dark"] body {
+      background-color: var(--bg-body-dark) !important;
+      color: #f8f9fa;
+    }
+
     .weather-icon { width: 80px; }
     .card { margin-top: 2rem; }
     .searchbar { max-width: 400px; margin: 0 auto 2rem auto; }
@@ -29,8 +42,13 @@
 </head>
 
 <body class="bg-light">
-
   <div class="container-fluid py-5">
+    <div class="d-flex justify-content-end mb-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+        <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+      </div>
+    </div>
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8">
         <div class="card shadow rounded-4">
@@ -38,7 +56,7 @@
             <form method="post" class="mb-4 d-flex searchbar" id="city-form">
               {% csrf_token %}
               <input type="text" name="city" class="form-control me-2"
-                     placeholder="Eg: Galle, Sri Lanka — <City>, <Country Name>"
+                     placeholder="Eg: Galle, Sri Lanka"
                      value="{{ city|default:'' }}">
               <button class="btn btn-primary" type="submit">Search</button>
             </form>
@@ -56,44 +74,73 @@
               <!-- Current Weather -->
               <h2 class="card-title text-center mb-4">Weather in {{ weather.city }}</h2>
               <p class="text-center text-muted">{{ now|date:"l, F j, Y" }} — <span id="live-time">{{ now|time:"H:i:s" }}</span></p>
-              
-              <div class="d-flex flex-column align-items-center mb-4">
-                <img src="https:{{ weather.icon }}" alt="Weather icon" class="weather-icon mb-2">
-                <h3 class="display-4 my-3">{{ weather.temp_c }}°C</h3>
-                <span class="text-muted">{{ weather.condition }}</span>
+
+              <div class="row align-items-center justify-content-center mb-4 g-4">
+                <!-- Left: Main Weather Icon, Temp, Condition -->
+                <div class="col-12 col-md-5">
+                  <div class="d-flex flex-column align-items-center">
+                    <img src="https:{{ weather.icon }}" alt="Weather icon" style="width:80px; margin-bottom:10px;">
+                    <div class="display-4 my-3">{{ weather.temp_c }}°C</div>
+                    <div class="text-muted" style="font-size:1.1rem;">{{ weather.condition }}</div>
+                  </div>
+                </div>
+                <!-- Right: Metrics in Small Boxes -->
+                <div class="col-12 col-md-7">
+                  <div class="row g-3">
+                    <div class="col-6 col-sm-4">
+                      <div class="card text-center shadow-sm py-3">
+                        <i class="wi wi-humidity" style="font-size:2em; color:#3498db;"></i>
+                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.humidity }}%</div>
+                        <div class="small text-muted">Humidity</div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="card text-center shadow-sm py-3">
+                        <i class="wi wi-strong-wind" style="font-size:2em; color:#95a5a6;"></i>
+                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.wind_kph }} km/h</div>
+                        <div class="small text-muted">Wind</div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="card text-center shadow-sm py-3">
+                        <i class="wi wi-day-sunny" style="font-size:2em; color:#f7b731;"></i>
+                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.uv }}</div>
+                        <div class="small text-muted">UV Index</div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="card text-center shadow-sm py-3">
+                        <i class="wi wi-thermometer" style="font-size:2em; color:#e17055;"></i>
+                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.feelslike_c }}°C</div>
+                        <div class="small text-muted">Feels Like</div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="card text-center shadow-sm py-3">
+                        <i class="wi wi-barometer" style="font-size:2em; color:#636e72;"></i>
+                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.pressure_mb }} hPa</div>
+                        <div class="small text-muted">Pressure</div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="card text-center shadow-sm py-3">
+                        <i class="wi wi-raindrop" style="font-size:2em; color:#00b894;"></i>
+                        <div class="mt-2 fw-bold" style="font-size:1.1em;">{{ weather.dewpoint_c }}°C</div>
+                        <div class="small text-muted">Dew Point</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <ul class="list-group list-group-flush align mb-4">
-                <li class="list-group-item">
-                  <i class="wi wi-humidity me-2"></i>
-                  Humidity: <strong>{{ weather.humidity }}%</strong>
-                </li>
-                <li class="list-group-item">
-                  <i class="wi wi-strong-wind me-2"></i>
-                  Wind Speed: <strong>{{ weather.wind_kph }} km/h</strong>
-                </li>
-                <li class="list-group-item">
-                  <i class="wi wi-day-sunny me-2"></i>
-                  UV Index: <strong>{{ weather.uv }}</strong>
-                </li>
-                <li class="list-group-item">
-                  <i class="wi wi-thermometer me-2"></i>
-                  Feels Like: <strong>{{ weather.feelslike_c }}°C</strong>
-                </li>
-                <li class="list-group-item">
-                  <i class="wi wi-barometer me-2"></i>
-                  Pressure: <strong>{{ weather.pressure_mb }} hPa</strong>
-                </li>
-              </ul>
 
               
               <!-- Hourly Forecast for Today -->
               {% if hourly %}
-              <h3 class="text-center mb-4">Today's Hourly Forecast</h3>
+              <h3 class="text-center mb-">Hourly Forecast</h3>
               <div class="hourly-scroll pb-3 mb-4">
                 {% for hour in hourly %}
                 <div class="hourly-item">
-                  <div class="card text-center border-0 bg-light">
+                  <div class="card text-center border-1 bg-body">
                     <div class="card-body py-2">
                       <p class="small mb-1"><strong>{{ hour.time|time:"H:i" }}</strong></p>
                       <img src="https:{{ hour.icon }}" alt="{{ hour.condition }}" class="hourly-icon mb-1">
@@ -111,12 +158,11 @@
               <!-- 7-Day Forecast -->
               {% if forecast %}
               <h3 class="text-center mb-4">Coming Week's Forecast</h3>
-              <div class="row">
+              <div class="row ">
                 {% for day in forecast %}
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                  <div class="card forecast-card h-100 text-center">
+                  <div class="card forecast-card h-100 text-center bg-body text-body border border-secondary-subtle">
                     <div class="card-body">
-                      <!-- Day Name (Today, Tomorrow, or weekday name) -->
                       {% if forloop.first %}
                         <h6 class="card-title">Today</h6>
                       {% elif forloop.counter == 2 %}
@@ -124,20 +170,10 @@
                       {% else %}
                         <h6 class="card-title">{{ day.date|date:"l" }}</h6>
                       {% endif %}
-                      
-                      <!-- Formatted Date -->
                       <p class="card-text small text-muted">{{ day.date|date:"M j" }}</p>
-                      
-                      <!-- Weather Icon -->
                       <img src="https:{{ day.icon }}" alt="{{ day.condition }}" class="forecast-icon mb-2">
-                      
-                      <!-- Temperature Range -->
                       <p class="mb-1"><strong>{{ day.max_temp|floatformat:0 }}° / {{ day.min_temp|floatformat:0 }}°</strong></p>
-                      
-                      <!-- Weather Condition -->
                       <p class="small text-muted mb-1">{{ day.condition }}</p>
-                      
-                      <!-- Additional Info -->
                       <small class="text-muted">UV: {{ day.uv }} | Humidity: {{ day.humidity }}%</small>
                     </div>
                   </div>
@@ -183,6 +219,28 @@
       minLength: 2
     });
   });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const htmlElement = document.documentElement;
+        const switchElement = document.getElementById('darkModeSwitch');
+        let currentTheme = localStorage.getItem('bsTheme');
+        if (!currentTheme) {
+            currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        htmlElement.setAttribute('data-bs-theme', currentTheme);
+        switchElement.checked = currentTheme === 'dark';
+        switchElement.addEventListener('change', function () {
+            if (this.checked) {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                localStorage.setItem('bsTheme', 'dark');
+            } else {
+                htmlElement.setAttribute('data-bs-theme', 'light');
+                localStorage.setItem('bsTheme', 'light');
+            }
+        });
+    });
   </script>
   
 </body>
