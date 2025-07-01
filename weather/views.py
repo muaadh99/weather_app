@@ -14,9 +14,21 @@ def get_weather(city="Colombo"):
         if response.status_code == 200:
             data = response.json()
             
+            # Parse location local time
+            location_localtime = None
+            if "localtime" in data["location"]:
+                try:
+                    location_localtime = datetime.strptime(data["location"]["localtime"], "%Y-%m-%d %H:%M")
+                except:
+                    location_localtime = None
+            
             # Current weather data
             current_weather = {
                 "city": data["location"]["name"],
+                "country": data["location"]["country"],
+                "region": data["location"]["region"],
+                "localtime": location_localtime,
+                "timezone_id": data["location"]["tz_id"],
                 "temp_c": data["current"]["temp_c"],
                 "feelslike_c": data["current"]["feelslike_c"],
                 "humidity": data["current"]["humidity"],
@@ -26,6 +38,7 @@ def get_weather(city="Colombo"):
                 "condition": data["current"]["condition"]["text"],
                 "dewpoint_c": data["current"].get("dewpoint_c"),
                 "icon": data["current"]["condition"]["icon"],
+                "last_updated": data["current"]["last_updated"],
             }
             
             # 7-day forecast data
