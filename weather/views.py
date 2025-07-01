@@ -24,6 +24,7 @@ def get_weather(city="Colombo"):
                 "uv": data["current"]["uv"],
                 "pressure_mb": data["current"]["pressure_mb"],
                 "condition": data["current"]["condition"]["text"],
+                "dewpoint_c": data["current"].get("dewpoint_c"),
                 "icon": data["current"]["condition"]["icon"],
             }
             
